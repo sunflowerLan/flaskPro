@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+<style media="screen">
+  .addform{
+    margin:10px 5px 50px 5px;
+    border:5px;
+  }
+</style>
+{% block title %} 健身记录 {% endblock %}
+{% block content %}
+<script type="text/javascript">
+  $(function(){
+    var d = new Date(),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    // return [year, month, day].join('-');
+    document.getElementById("trainTime").value = [year, month, day].join('-');
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var xmlhttp = new XMLHttpRequest();
+    $("#boyd_part").change(function(){
+      var bodypart = document.getElementById("boyd_part");
+      var index = bodypart.selectedIndex;
+      var text = bodypart.options[index].text;
+      $.getJSON($SCRIPT_ROOT + "/get_action",{body_part:text},
+        function(data){
+          // alert(data);
+          $("#train_action").empty();
+          $.each(data,function(i,action_name){
+            $("#train_action").append("<option value='"+action_name.id+"'>"+action_name.action_name+"</option>");
+          });
+      });
+    });
+  });
+</script>
+
+<div class="container">
+  <form class="form-horizontal" role="form" action="index.html" method="post">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-gruop">
+          <label class="control-label" for="">选择日期:</label>
+          <input class="form-control" type="date" id="trainTime"/>
+          <!-- <div class="input-group date" data-provide="datepicker" id="datetimepicker">
+            <input type="text" class="form-control" value="">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-th"></span>
+            </div> -->
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="bodyPart">训练部位</label>
+        <select class="form-control" name="body_part" id="boyd_part">
+          <<option value="请选择" selected>请选择...</option>
+          <option value="0" >胸部</option>
+          <option value="1">背部</option>
+          <option value="2">肩部</option>
+          <option value="3">腹部</option>
+          <option value="4">上肢</option>
+          <option value="5">腿部</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="train_action">训练动作</label>
+        <select class="form-control" name="train_action" id="train_action">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6" >
+        <div class="input-group">
+          <span>重量</span>
+          <input type="text" class="form-control" name="weight" id="weight" placeholder="">
+          <span class="input-group-addon">KG</span>
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <div class="input-group">
+          <span>RM</span>
+          <input type="text" class="form-control" name="rm" id="rm" placeholder=""></label>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="float:right" type="button" name="save">保存</button>
+  </form>
+
+</div>
+{% endblock %}

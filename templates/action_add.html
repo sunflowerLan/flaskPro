@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} 新增训练动作 {% endblock %}
+{% block content %}
+<div class="container">
+  <form class="form" action="{{url_for('create_action')}}" method="post">
+    <div class="form-group">
+      <label for="xlbw">训练部位</label>
+      <select class="form-control" name="body_part">
+        <option value="胸部" selected>胸部</option>
+        <option value="背部">背部</option>
+        <option value="肩部">肩部</option>
+        <option value="腹部">腹部</option>
+        <option value="上肢">上肢</option>
+        <option value="腿部">腿部</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="action_name">动作名称</label>
+      <input type="text" name="action_name" class="form-control">
+    </div>
+    <button type="submit" name="create" class="btn btn-primary">保存</button>
+  </form>
+</div>
+{% endblock %}

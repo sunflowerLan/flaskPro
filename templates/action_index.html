@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %} 训练动作 {% endblock %}
+{% block content %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var xmlhttp = new XMLHttpRequest();
+    $("#body_part").change(function(){
+      var bodypart = document.getElementById("body_part");
+      var index = bodypart.selectedIndex;
+      var text = bodypart.options[index].text;
+      $.getJSON($SCRIPT_ROOT + "/get_action",{body_part:text},
+        function(data){
+          // alert(data);
+          $("tbody").empty();
+          $.each(data,function(i,action_name){
+            var url=flask_util.url_for('delete_action',{action_name:action_name.action_name});
+            $("tbody").append("<tr> <td>"+(i+1)+"</td> <td>" + action_name.action_name + "</td>  <td><a href="+ url +" class='btn btn-danger btn-sm'>删除</a></td>  </tr>");
+          });
+      });
+    });
+  });
+</script>
+
+<style media="screen">
+  #find_action_name{
+    float: right;
+    border-top: 20px;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="container">
+  <div class="form-gruop col-md-6">
+    <label for="body_part" class="control-labek">训练部位</label>
+    <select class="form-control" name="body_part" id="body_part">
+      <option value="0" selected>胸部</option>
+      <option value="1">背部</option>
+      <option value="2">肩部</option>
+      <option value="3">腹部</option>
+      <option value="4">上肢</option>
+      <option value="5">腿部</option>
+    </select>
+  </div>
+    <!-- <button type="button" class="btn btn-primary" id="find_action_name">查询</button> -->
+  <br>
+  <br>
+  <a href="{{url_for('add_action')}}" class="btn btn-primary" style="float:right">新增</a>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>动作名称</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for action in actions %}
+      <tr>
+        <td>{{loop.index}}</td>
+        <td>{{action.action_name}}</td>
+        <td><a href="{{url_for('delete_action',action_name=action.action_name)}}" class="btn btn-danger btn-sm">删除</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
